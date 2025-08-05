@@ -1,8 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const OrderTracking = ({ currentStep }) => {
-  const steps = ['Pending', 'Processing', 'Shipped', 'Delivered'];
+  const { t } = useTranslation(); // Hook to access translation function
+
+  // Define steps using translated strings
+  const steps = [
+    t('orders.status.pending', 'Pending'),
+    t('orders.status.processing', 'Processing'),
+    t('orders.status.shipped', 'Shipped'),
+    t('orders.status.delivered', 'Delivered'),
+  ];
 
   return (
     <div className="flex items-center justify-between mt-6">

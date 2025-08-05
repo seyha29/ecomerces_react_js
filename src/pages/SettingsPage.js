@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { Settings, Palette, Bell, Globe } from 'lucide-react';
 
 const SettingsPage = ({ settings = {}, setSettings }) => {
+  const { t, i18n } = useTranslation(); // Hook to access translation function and i18n instance
+
   // Initialize form data with proper fallbacks
   const [formData, setFormData] = useState({
     theme: settings.theme || 'light',
@@ -21,18 +24,22 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSettings(formData);
-    alert('Settings saved successfully!');
+    // Change language in i18next if language setting changes
+    if (formData.language !== i18n.language) {
+      i18n.changeLanguage(formData.language);
+    }
+    alert(t('settings.saveSuccess', 'Settings saved successfully!'));
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Settings</h1>
+      <h1 className="text-3xl font-bold mb-8">{t('settings.title', 'Settings')}</h1>
       <div className="max-w-md mx-auto">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <div className="flex items-center space-x-3 mb-6">
             <Settings className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-              Customize Your Experience
+              {t('settings.customize', 'Customize Your Experience')}
             </h2>
           </div>
           
@@ -41,7 +48,9 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
             <div>
               <label className="flex items-center space-x-3">
                 <Palette className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                <span className="font-medium text-gray-700 dark:text-gray-300">Theme</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t('settings.theme.label', 'Theme')}
+                </span>
               </label>
               <select
                 name="theme"
@@ -49,9 +58,9 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
                 onChange={handleInputChange}
                 className="w-full mt-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-                <option value="system">System Default</option>
+                <option value="light">{t('settings.theme.light', 'Light')}</option>
+                <option value="dark">{t('settings.theme.dark', 'Dark')}</option>
+                <option value="system">{t('settings.theme.system', 'System Default')}</option>
               </select>
             </div>
 
@@ -59,7 +68,9 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
             <div>
               <label className="flex items-center space-x-3">
                 <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                <span className="font-medium text-gray-700 dark:text-gray-300">Notifications</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t('settings.notifications.label', 'Notifications')}
+                </span>
               </label>
               <div className="mt-2 flex items-center space-x-3">
                 <input
@@ -70,7 +81,9 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <span className="text-gray-600 dark:text-gray-400">
-                  {formData.notifications ? 'Enabled' : 'Disabled'}
+                  {formData.notifications
+                    ? t('settings.notifications.enabled', 'Enabled')
+                    : t('settings.notifications.disabled', 'Disabled')}
                 </span>
               </div>
             </div>
@@ -79,7 +92,9 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
             <div>
               <label className="flex items-center space-x-3">
                 <Globe className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                <span className="font-medium text-gray-700 dark:text-gray-300">Language</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t('settings.language.label', 'Language')}
+                </span>
               </label>
               <select
                 name="language"
@@ -87,11 +102,8 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
                 onChange={handleInputChange}
                 className="w-full mt-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="en">English</option>
-                <option value="es">Español (Spanish)</option>
-                <option value="fr">Français (French)</option>
-                <option value="de">Deutsch (German)</option>
-                <option value="ja">日本語 (Japanese)</option>
+                <option value="en">{t('settings.language.en', 'English')}</option>
+                <option value="kh">{t('settings.language.kh', 'Khmer')}</option>
               </select>
             </div>
 
@@ -100,7 +112,7 @@ const SettingsPage = ({ settings = {}, setSettings }) => {
               type="submit"
               className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800"
             >
-              Save Settings
+              {t('settings.save', 'Save Settings')}
             </button>
           </form>
         </div>
@@ -114,7 +126,7 @@ SettingsPage.propTypes = {
   settings: PropTypes.shape({
     theme: PropTypes.oneOf(['light', 'dark', 'system']),
     notifications: PropTypes.bool,
-    language: PropTypes.oneOf(['en', 'es', 'fr', 'de', 'ja']),
+    language: PropTypes.oneOf(['en', 'kh']),
   }),
   setSettings: PropTypes.func.isRequired,
 };

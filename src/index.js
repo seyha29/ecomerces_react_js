@@ -2,9 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './input.css';
+import './i18n';
 import App from './App';
+import i18n from './i18n';
 
-// Register service worker
+i18n.on('initialized', () => {
+  console.log('i18next initialized with language:', i18n.language);
+});
+
+i18n.on('failedLoading', (lng, ns, msg) => {
+  console.error('Failed loading language:', lng, 'Namespace:', ns, 'Message:', msg);
+});
+
+i18n.on('languageChanged', (lng) => {
+  console.log('Language changed to:', lng);
+});
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker

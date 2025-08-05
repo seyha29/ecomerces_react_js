@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import ProductModal from '../components/ProductModal';
 import { products } from '../data/products';
 import OrderTracking from '../components/common/OrderTracking'; // Import tracking component
@@ -32,18 +33,19 @@ const OrdersPage = ({
   wishlistItems,
   setSelectedProduct,
 }) => {
+  const { t } = useTranslation(); // Hook to access translation function
   const [selectedProduct, setSelectedProductLocal] = useState(null);
 
   const fallbackProduct = {
     image: 'https://via.placeholder.com/64',
-    name: 'Sample Product',
+    name: t('orders.fallbackProduct.name', 'Sample Product'),
     price: '0.00',
-    description: 'No description available',
-    brand: 'Unknown',
+    description: t('orders.fallbackProduct.description', 'No description available'),
+    brand: t('orders.fallbackProduct.brand', 'Unknown'),
     features: [],
     rating: 0,
     reviews: 0,
-    warranty: 'N/A',
+    warranty: t('orders.fallbackProduct.warranty', 'N/A'),
   };
 
   const getProductDetails = (product) => {
@@ -54,14 +56,14 @@ const OrdersPage = ({
   if (!isLoggedIn) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Order History</h1>
+        <h1 className="text-3xl font-bold mb-8">{t('orders.title', 'Order History')}</h1>
         <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <p className="text-gray-600">Please log in to view your order history.</p>
+          <p className="text-gray-600">{t('orders.loginPrompt', 'Please log in to view your order history.')}</p>
           <button
             onClick={() => setCurrentPage('login')}
             className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
           >
-            Sign In
+            {t('user.signIn', 'Sign In')}
           </button>
         </div>
       </div>
@@ -70,21 +72,25 @@ const OrdersPage = ({
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Order History</h1>
+      <h1 className="text-3xl font-bold mb-8">{t('orders.title', 'Order History')}</h1>
       <div className="bg-white rounded-lg shadow-md p-6">
         {orders.length === 0 ? (
-          <div className="text-center text-gray-500 text-sm">No orders found</div>
+          <div className="text-center text-gray-500 text-sm">{t('orders.empty', 'No orders found')}</div>
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
               <div key={order.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <p className="font-semibold">Order #{order.id}</p>
-                    <p className="text-gray-600 text-sm">Placed on {order.date}</p>
+                    <p className="font-semibold">
+                      {t('orders.orderNumber', 'Order #{{id}}').replace('{{id}}', order.id)}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      {t('orders.placedOn', 'Placed on {{date}}').replace('{{date}}', order.date)}
+                    </p>
                   </div>
                   <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                    {order.status}
+                    {t(`orders.status.${order.status.toLowerCase()}`, order.status)}
                   </span>
                 </div>
 
@@ -101,8 +107,11 @@ const OrdersPage = ({
                     <div className="flex-1">
                       <p className="font-medium">{product.name || fallbackProduct.name}</p>
                       <p className="text-gray-600">
-                        ${typeof product.price === 'number' ? product.price.toFixed(2) : fallbackProduct.price} x{' '}
-                        {product.quantity}
+                        $
+                        {typeof product.price === 'number'
+                          ? product.price.toFixed(2)
+                          : fallbackProduct.price}{' '}
+                        x {product.quantity}
                       </p>
                     </div>
                     <div className="text-right">
@@ -114,12 +123,14 @@ const OrdersPage = ({
                         }}
                         className="text-blue-600 hover:underline text-sm"
                       >
-                        View Details
+                        {t('orders.viewDetails', 'View Details')}
                       </button>
                     </div>
                   </div>
                 ))}
-                <p className="font-semibold text-right">Total: ${order.total.toFixed(2)}</p>
+                <p className="font-semibold text-right">
+                  {t('orders.total', 'Total')}: ${order.total.toFixed(2)}
+                </p>
               </div>
             ))}
           </div>

@@ -1,13 +1,25 @@
+/* Optional: Fallback font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Battambang&display=swap');
+
+/* Load Khmer Bokor from local file (if you have it in /fonts/KhmerOSbokor.ttf) */
+@font-face {
+  font-family: 'Khmer Bokor';
+  src: url('/fonts/KhmerOSbokor.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+
+  /* Use Khmer Bokor if loaded, then fallback to Khmer OS Bokor or Google Fonts */
+  font-family: 'Khmer Bokor', 'Khmer OS Bokor', 'Battambang', 'Noto Sans Khmer',
+    'Khmer OS', Arial, sans-serif;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

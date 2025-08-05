@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import {
   Facebook,
   Instagram,
@@ -11,10 +12,11 @@ import {
   Heart,
   Shield,
   Truck,
-  CreditCard
+  CreditCard,
 } from 'lucide-react';
 
 const Footer = ({ setCurrentPage }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
@@ -41,6 +43,9 @@ const Footer = ({ setCurrentPage }) => {
         .animate-fade-in {
           animation: fade-in 0.5s ease-out;
         }
+        footer {
+          font-family: 'Noto Sans Khmer', 'Khmer OS', Arial, sans-serif;
+        }
       `}</style>
 
       <footer className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-hidden">
@@ -63,8 +68,7 @@ const Footer = ({ setCurrentPage }) => {
                     MODERNSTORE
                   </h3>
                   <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                    Redefining retail excellence through innovation, quality, and customer obsession.
-                    Your gateway to the future of shopping.
+                    {t('footer.brandDescription')}
                   </p>
                 </div>
                 {/* Contact Info */}
@@ -73,24 +77,29 @@ const Footer = ({ setCurrentPage }) => {
                     <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg mr-4 group-hover:scale-110 transition-transform">
                       <Mail className="w-5 h-5" />
                     </div>
-                    <a href="mailto:thanseyha2002@gmail.com" className="text-gray-300 group-hover:text-white transition-colors">thanseyha2002@gmail.com</a>
+                    <a href="mailto:thanseyha2002@gmail.com" className="text-gray-300 group-hover:text-white transition-colors">
+                      thanseyha2002@gmail.com
+                    </a>
                   </div>
                   <div className="flex items-center group cursor-pointer">
                     <div className="bg-gradient-to-r from-green-500 to-teal-500 p-2 rounded-lg mr-4 group-hover:scale-110 transition-transform">
                       <Phone className="w-5 h-5" />
                     </div>
-                    <a href="tel:+88566675560" className="text-gray-300 group-hover:text-white transition-colors">(+885) 66-675-560</a>
+                    <a href="tel:+88566675560" className="text-gray-300 group-hover:text-white transition-colors">
+                      (+885) 66-675-560
+                    </a>
                   </div>
                   <div className="flex items-center group cursor-pointer">
                     <div className="bg-gradient-to-r from-red-500 to-pink-500 p-2 rounded-lg mr-4 group-hover:scale-110 transition-transform">
                       <MapPin className="w-5 h-5" />
                     </div>
-                    <span className="text-gray-300 group-hover:text-white transition-colors">Betheay, Kampong Cham, Cambodia</span>
+                    <span className="text-gray-300 group-hover:text-white transition-colors">
+                      {t('footer.location')}
+                    </span>
                   </div>
                 </div>
                 {/* Social Media */}
                 <div className="flex space-x-4">
-                  {/* Facebook with link */}
                   <a
                     href="https://www.facebook.com/than.seyha.9235/"
                     target="_blank"
@@ -99,7 +108,6 @@ const Footer = ({ setCurrentPage }) => {
                   >
                     <Facebook className="w-6 h-6" />
                   </a>
-                  {/* Instagram with link */}
                   <a
                     href="https://www.instagram.com/thanseyha_2002/"
                     target="_blank"
@@ -108,7 +116,6 @@ const Footer = ({ setCurrentPage }) => {
                   >
                     <Instagram className="w-6 h-6" />
                   </a>
-                  {/* Telegram with link (using Send icon) */}
                   <a
                     href="https://t.me/thanseyha11"
                     target="_blank"
@@ -117,7 +124,6 @@ const Footer = ({ setCurrentPage }) => {
                   >
                     <Send className="w-6 h-6" />
                   </a>
-                  {/* Email contact link */}
                   <a
                     href="mailto:thanseyha2002@gmail.com"
                     className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 cursor-pointer transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 hover:text-green-400 hover:bg-green-400/20"
@@ -128,18 +134,9 @@ const Footer = ({ setCurrentPage }) => {
               </div>
               {/* Customer Service */}
               <div>
-                <h4 className="font-bold text-xl mb-6 text-white">Customer Care</h4>
+                <h4 className="font-bold text-xl mb-6 text-white">{t('footer.customerCare.title')}</h4>
                 <div className="space-y-3">
-                  {[
-                    { text: 'Help Center', page: 'help' },
-                    { text: 'Contact Us', page: 'contact' },
-                    { text: 'Order Tracking' },
-                    { text: 'Shipping & Delivery' },
-                    { text: 'Returns & Refunds' },
-                    { text: 'Size Guide' },
-                    { text: 'Product Care' },
-                    { text: 'Live Chat Support' }
-                  ].map(({ text, page }, index) => (
+                  {t('footer.customerCare.items', { returnObjects: true }).map(({ text, page }, index) => (
                     <p
                       key={index}
                       onClick={() => page && setCurrentPage(page)}
@@ -154,42 +151,32 @@ const Footer = ({ setCurrentPage }) => {
               </div>
               {/* Company */}
               <div>
-                <h4 className="font-bold text-xl mb-6 text-white">Company</h4>
+                <h4 className="font-bold text-xl mb-6 text-white">{t('footer.company.title')}</h4>
                 <div className="space-y-3">
-                  {[
-                    'About Us',
-                    'Careers',
-                    'Press & Media',
-                    'Partnerships',
-                    'Sustainability',
-                    'Investor Relations',
-                    'Community'
-                  ].map((item, index) => (
+                  {t('footer.company.items', { returnObjects: true }).map(({ text, page }, index) => (
                     <p
                       key={index}
-                      onClick={() => item === 'About Us' && setCurrentPage('about')}
+                      onClick={() => page && setCurrentPage(page)}
                       className={`text-gray-400 hover:text-white cursor-pointer transition-all duration-300 hover:translate-x-2 ${
-                        item === 'About Us' ? 'hover:text-purple-400' : 'hover:text-purple-400'
+                        page ? 'hover:text-purple-400' : 'hover:text-purple-400'
                       }`}
                     >
-                      {item}
+                      {text}
                     </p>
                   ))}
                 </div>
               </div>
               {/* Newsletter */}
               <div>
-                <h4 className="font-bold text-xl mb-6 text-white">Stay Connected</h4>
-                <p className="text-gray-400 mb-6 leading-relaxed">
-                  Join 100K+ subscribers for exclusive deals, early access, and insider updates.
-                </p>
+                <h4 className="font-bold text-xl mb-6 text-white">{t('footer.newsletter.title')}</h4>
+                <p className="text-gray-400 mb-6 leading-relaxed">{t('footer.newsletter.description')}</p>
                 <div className="mb-6">
                   <div className="relative">
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
+                      placeholder={t('footer.newsletter.emailPlaceholder')}
                       className="w-full px-4 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent text-white placeholder-gray-400 pr-12"
                     />
                     <button
@@ -201,39 +188,35 @@ const Footer = ({ setCurrentPage }) => {
                   </div>
                   {isSubscribed && (
                     <p className="text-green-400 text-sm mt-2 animate-fade-in">
-                      🎉 Successfully subscribed! Welcome to the family.
+                      {t('footer.newsletter.successMessage')}
                     </p>
                   )}
                 </div>
                 {/* Trust Badges */}
                 <div className="space-y-3">
-                  <div className="flex items-center text-gray-400">
-                    <Shield className="w-4 h-4 mr-2 text-green-400" />
-                    <span className="text-sm">100% Secure & Private</span>
-                  </div>
-                  <div className="flex items-center text-gray-400">
-                    <Heart className="w-4 h-4 mr-2 text-red-400" />
-                    <span className="text-sm">Join 1M+ Happy Customers</span>
-                  </div>
+                  {t('footer.newsletter.trustBadges', { returnObjects: true }).map(({ text }, index) => (
+                    <div key={index} className="flex items-center text-gray-400">
+                      {index === 0 ? <Shield className="w-4 h-4 mr-2 text-green-400" /> : <Heart className="w-4 h-4 mr-2 text-red-400" />}
+                      <span className="text-sm">{text}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
             {/* Trust Indicators */}
             <div className="border-t border-gray-700/50 pt-8 mb-8">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { icon: Truck, title: 'Free Shipping', desc: 'On orders over $50' },
-                  { icon: Shield, title: 'Secure Payment', desc: 'SSL protected' },
-                  { icon: CreditCard, title: 'Easy Returns', desc: '30-day policy' },
-                  { icon: Phone, title: '24/7 Support', desc: 'Always available' }
-                ].map(({ icon: Icon, title, desc }, index) => (
+                {t('footer.trustIndicators', { returnObjects: true }).map(({ title, description }, index) => (
                   <div key={index} className="flex items-center space-x-3 group cursor-pointer">
                     <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 p-3 rounded-xl group-hover:scale-110 transition-transform">
-                      <Icon className="w-6 h-6 text-blue-400" />
+                      {index === 0 && <Truck className="w-6 h-6 text-blue-400" />}
+                      {index === 1 && <Shield className="w-6 h-6 text-blue-400" />}
+                      {index === 2 && <CreditCard className="w-6 h-6 text-blue-400" />}
+                      {index === 3 && <Phone className="w-6 h-6 text-blue-400" />}
                     </div>
                     <div>
                       <h5 className="font-semibold text-white group-hover:text-blue-400 transition-colors">{title}</h5>
-                      <p className="text-gray-400 text-sm">{desc}</p>
+                      <p className="text-gray-400 text-sm">{description}</p>
                     </div>
                   </div>
                 ))}
@@ -244,16 +227,18 @@ const Footer = ({ setCurrentPage }) => {
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <div className="text-center md:text-left mb-4 md:mb-0">
                   <p className="text-gray-400">
-                    &copy; 2025 ModernStore. All rights reserved.
+                    {t('footer.bottom.copyright')}
                     <span className="text-red-400 mx-2">❤️</span>
-                    Crafted with passion for exceptional experiences.
+                    {t('footer.bottom.crafted')}
                   </p>
                 </div>
                 <div className="flex items-center space-x-6">
                   <div className="flex space-x-4 text-sm text-gray-400">
-                    <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
-                    <span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span>
-                    <span className="hover:text-white cursor-pointer transition-colors">Cookies</span>
+                    {t('footer.bottom.links', { returnObjects: true }).map(({ text }, index) => (
+                      <span key={index} className="hover:text-white cursor-pointer transition-colors">
+                        {text}
+                      </span>
+                    ))}
                   </div>
                   {/* Back to Top Button */}
                   <button
@@ -272,7 +257,6 @@ const Footer = ({ setCurrentPage }) => {
   );
 };
 
-// PropTypes validation
 Footer.propTypes = {
   setCurrentPage: PropTypes.func.isRequired,
 };

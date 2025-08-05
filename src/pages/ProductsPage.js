@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { Filter, Search } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { products } from '../data/products';
@@ -19,6 +20,8 @@ const ProductsPage = ({
   sortBy,
   setSortBy,
 }) => {
+  const { t } = useTranslation();
+
   // Memoize filtered and sorted products to prevent unnecessary recalculations
   const processedProducts = useMemo(() => {
     // Filter products
@@ -93,12 +96,12 @@ const ProductsPage = ({
           <div className="card p-6 sticky top-24">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
               <Filter className="w-5 h-5 mr-2" />
-              Filters
+              {t('products.filters.title', 'Filters')}
             </h3>
 
             {/* Categories Filter */}
             <div className="mb-6">
-              <h4 className="font-medium mb-3">Categories</h4>
+              <h4 className="font-medium mb-3">{t('products.filters.categories', 'Categories')}</h4>
               <div className="space-y-2">
                 {categories?.map((category) => (
                   <button
@@ -114,7 +117,7 @@ const ProductsPage = ({
                     <span className="mr-2" aria-hidden="true">
                       {category?.icon || '📦'}
                     </span>
-                    {category?.name || 'Unknown Category'}
+                    {t(`categories.${category?.id}`, category?.name || 'Unknown Category')}
                   </button>
                 ))}
               </div>
@@ -122,36 +125,36 @@ const ProductsPage = ({
 
             {/* Price Range Filter */}
             <div className="mb-6">
-              <h4 className="font-medium mb-3">Price Range</h4>
+              <h4 className="font-medium mb-3">{t('products.filters.priceRange', 'Price Range')}</h4>
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <input
                     type="number"
-                    placeholder="Min"
+                    placeholder={t('products.filters.minPrice', 'Min')}
                     className="w-20 px-2 py-1 border rounded text-sm"
                     value={priceRange?.[0] || 0}
                     onChange={handleMinPriceChange}
                     min="0"
-                    aria-label="Minimum price"
+                    aria-label={t('products.filters.minPriceLabel', 'Minimum price')}
                   />
                   <span className="text-gray-500">-</span>
                   <input
                     type="number"
-                    placeholder="Max"
+                    placeholder={t('products.filters.maxPrice', 'Max')}
                     className="w-20 px-2 py-1 border rounded text-sm"
                     value={priceRange?.[1] || 1000}
                     onChange={handleMaxPriceChange}
                     min="0"
-                    aria-label="Maximum price"
+                    aria-label={t('products.filters.maxPriceLabel', 'Maximum price')}
                   />
                 </div>
                 <div className="space-y-2">
                   {[
-                    { label: 'Under $25', min: 0, max: 25 },
-                    { label: '$25 - $50', min: 25, max: 50 },
-                    { label: '$50 - $100', min: 50, max: 100 },
-                    { label: '$100 - $200', min: 100, max: 200 },
-                    { label: 'Over $200', min: 200, max: 1000 },
+                    { label: t('products.filters.priceRanges.under25', 'Under $25'), min: 0, max: 25 },
+                    { label: t('products.filters.priceRanges.range25to50', '$25 - $50'), min: 25, max: 50 },
+                    { label: t('products.filters.priceRanges.range50to100', '$50 - $100'), min: 50, max: 100 },
+                    { label: t('products.filters.priceRanges.range100to200', '$100 - $200'), min: 100, max: 200 },
+                    { label: t('products.filters.priceRanges.over200', 'Over $200'), min: 200, max: 1000 },
                   ].map((range) => (
                     <button
                       key={range.label}
@@ -171,7 +174,7 @@ const ProductsPage = ({
               className="w-full btn-secondary text-sm"
               type="button"
             >
-              Clear All Filters
+              {t('products.filters.clearAll', 'Clear All Filters')}
             </button>
           </div>
         </div>
@@ -189,30 +192,30 @@ const ProductsPage = ({
                   />
                   <input
                     type="text"
-                    placeholder="Search products..."
+                    placeholder={t('search.mobilePlaceholder', 'Search products...')}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 group"
                     value={searchQuery || ''}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    aria-label="Search products"
+                    aria-label={t('products.search.label', 'Search products')}
                   />
                 </div>
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-600 whitespace-nowrap">
-                  {processedProducts?.length || 0} products found
+                  {t('products.resultsCount', '{{count}} products found', { count: processedProducts?.length || 0 })}
                 </span>
                 <select
                   value={sortBy || 'featured'}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  aria-label="Sort products"
+                  aria-label={t('products.sort.label', 'Sort products')}
                 >
-                  <option value="featured">Featured</option>
-                  <option value="newest">Newest First</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="name">Name: A to Z</option>
+                  <option value="featured">{t('products.sort.featured', 'Featured')}</option>
+                  <option value="newest">{t('products.sort.newest', 'Newest First')}</option>
+                  <option value="price-low">{t('products.sort.priceLow', 'Price: Low to High')}</option>
+                  <option value="price-high">{t('products.sort.priceHigh', 'Price: High to Low')}</option>
+                  <option value="rating">{t('products.sort.rating', 'Highest Rated')}</option>
+                  <option value="name">{t('products.sort.name', 'Name: A to Z')}</option>
                 </select>
               </div>
             </div>
@@ -237,16 +240,18 @@ const ProductsPage = ({
               <div className="text-gray-400 mb-4">
                 <Search className="w-16 h-16 mx-auto" aria-hidden="true" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                {t('products.empty.title', 'No products found')}
+              </h3>
               <p className="text-gray-500 mb-6">
-                Try adjusting your filters or search terms to find what you&apos;re looking for.
+                {t('products.empty.description', 'Try adjusting your filters or search terms to find what you\'re looking for.')}
               </p>
               <button
                 onClick={handleClearFilters}
                 className="btn-primary"
                 type="button"
               >
-                Clear Filters
+                {t('products.empty.clearFilters', 'Clear Filters')}
               </button>
             </div>
           )}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { Star, Heart, Eye, ShoppingCart, Zap, Shield, Truck } from 'lucide-react';
 
 const ProductCard = ({
@@ -10,6 +11,7 @@ const ProductCard = ({
   setSelectedProduct = () => {},
   onViewDetails = () => {},
 }) => {
+  const { t } = useTranslation(); // Initialize translation hook
   const [isHovered, setIsHovered] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
@@ -48,7 +50,7 @@ const ProductCard = ({
       <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
         <img
           src={productData.image || 'https://picsum.photos/400/300'}
-          alt={productData.name || 'Product'}
+          alt={productData.name || t('products.card.namePlaceholder', { defaultValue: 'Product' })}
           className="w-full h-64 object-cover transition-all duration-700 group-hover:scale-110"
           onError={(e) => (e.target.src = '/fallback-image.png')}
         />
@@ -65,13 +67,13 @@ const ProductCard = ({
           )}
           {productData.isNew && (
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-              NEW
+              {t('products.card.new')}
             </div>
           )}
           {productData.isBestseller && (
             <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg flex items-center">
               <Zap className="w-3 h-3 mr-1" />
-              BESTSELLER
+              {t('products.card.bestseller')}
             </div>
           )}
         </div>
@@ -85,7 +87,7 @@ const ProductCard = ({
             className={`p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
               isInWishlist ? 'bg-red-500 text-white' : 'bg-white/90 text-gray-600 hover:text-red-500 hover:bg-white'
             }`}
-            title="Add to Wishlist"
+            title={t('products.card.addToWishlist')}
           >
             <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-current' : ''}`} />
           </button>
@@ -94,7 +96,7 @@ const ProductCard = ({
             className={`p-3 rounded-full shadow-lg backdrop-blur-sm bg-white/90 text-gray-600 hover:text-blue-500 hover:bg-white transition-all duration-200 hover:scale-110 ${
               showQuickView ? 'scale-110 text-blue-500' : ''
             }`}
-            title="Quick View"
+            title={t('products.card.quickView')}
           >
             <Eye className="w-5 h-5" />
           </button>
@@ -108,18 +110,18 @@ const ProductCard = ({
             <div className="flex items-center space-x-3 text-sm">
               <div className="flex items-center text-green-600">
                 <Shield className="w-4 h-4 mr-1" />
-                <span>Secure</span>
+                <span>{t('products.card.secure')}</span>
               </div>
               <div className="flex items-center text-blue-600">
                 <Truck className="w-4 h-4 mr-1" />
-                <span>Fast Ship</span>
+                <span>{t('products.card.fastShip')}</span>
               </div>
             </div>
             <button
               onClick={handleQuickView}
               className="text-gray-600 hover:text-blue-600 font-medium text-sm transition-colors"
             >
-              Quick View
+              {t('products.card.quickView')}
             </button>
           </div>
         </div>
@@ -127,9 +129,11 @@ const ProductCard = ({
       <div className="p-6">
         <div className="mb-3">
           <h3 className="font-bold text-xl mb-2 text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-            {productData.name || 'Premium Product'}
+            {productData.name || t('products.card.namePlaceholder', { defaultValue: 'Premium Product' })}
           </h3>
-          <p className="text-sm text-gray-500 mb-2">{productData.category || 'Electronics • Premium'}</p>
+          <p className="text-sm text-gray-500 mb-2">
+            {productData.category || t('products.card.categoryPlaceholder', { defaultValue: 'Electronics • Premium' })}
+          </p>
         </div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
@@ -152,7 +156,7 @@ const ProductCard = ({
                 productData.inStock ? 'animate-pulse' : ''
               }`}
             />
-            {productData.inStock ? 'In Stock' : 'Out of Stock'}
+            {productData.inStock ? t('products.card.inStock') : t('products.card.outOfStock')}
           </div>
         </div>
         <div className="mb-6">
@@ -165,11 +169,13 @@ const ProductCard = ({
             </div>
             {productData.originalPrice > productData.price && (
               <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-bold">
-                Save ${(productData.originalPrice - productData.price).toFixed(0)}
+                {t('products.card.save', { amount: (productData.originalPrice - productData.price).toFixed(0) })}
               </div>
             )}
           </div>
-          <p className="text-sm text-gray-500 mt-1">or ${((productData.price || 299) / 12).toFixed(0)}/month with financing</p>
+          <p className="text-sm text-gray-500 mt-1">
+            {t('products.card.monthlyPayment', { price: ((productData.price || 299) / 12).toFixed(0) })}
+          </p>
         </div>
         <button
           onClick={handleAddToCart}
@@ -185,14 +191,14 @@ const ProductCard = ({
           {isAddingToCart ? (
             <>
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              <span>Adding...</span>
+              <span>{t('products.card.addingToCart')}</span>
             </>
           ) : !productData.inStock ? (
-            <span>Out of Stock</span>
+            <span>{t('products.card.outOfStock')}</span>
           ) : (
             <>
               <ShoppingCart className="w-5 h-5" />
-              <span>Add to Cart</span>
+              <span>{t('products.card.addToCart')}</span>
             </>
           )}
         </button>
@@ -201,10 +207,10 @@ const ProductCard = ({
             onClick={() => onViewDetails(productData)}
             className="flex-1 py-2 px-4 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium text-sm"
           >
-            View Details
+            {t('products.card.viewDetails')}
           </button>
           <button className="flex-1 py-2 px-4 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium text-sm">
-            Share
+            {t('products.card.share')}
           </button>
         </div>
       </div>

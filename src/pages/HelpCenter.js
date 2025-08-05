@@ -1,34 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaQuestionCircle } from 'react-icons/fa';
 import { Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 
 const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
+  const { t } = useTranslation(); // Initialize translation hook
   const [openFaq, setOpenFaq] = useState(null);
 
-  const faqs = [
-    {
-      question: 'How do I place an order?',
-      answer:
-        'To place an order, browse our products, add items to your cart, and proceed to checkout. You’ll need to provide your shipping and payment details.',
-    },
-    {
-      question: 'What is your return policy?',
-      answer:
-        'We offer a 30-day return policy for unused items in original packaging. Contact us to initiate a return.',
-    },
-    {
-      question: 'How can I track my order?',
-      answer:
-        'Once your order is shipped, you’ll receive a tracking number via email. Use it on our website or the courier’s tracking page.',
-    },
-    {
-      question: 'Do you offer international shipping?',
-      answer:
-        'Yes, we ship worldwide. Shipping costs and times vary by location. Check our shipping page for details.',
-    },
-  ];
+  // Access FAQs from translations
+  const faqs = t('help.faq.items', { returnObjects: true });
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -89,7 +71,7 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                 } shadow-lg`}
               >
                 <Sparkles className="w-5 h-5 text-indigo-500" />
-                <span className="text-sm font-bold">Help Center</span>
+                <span className="text-sm font-bold">{t('help.title')}</span>
               </div>
             </div>
             <h2
@@ -97,14 +79,14 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                 isDarkMode ? 'from-gray-200 via-blue-400 to-purple-400' : 'from-gray-800 via-blue-600 to-purple-600'
               } bg-clip-text text-transparent leading-tight`}
             >
-              Help Center
+              {t('help.title')}
             </h2>
             <p
               className={`text-xl ${
                 isDarkMode ? 'text-gray-300' : 'text-gray-600'
               } max-w-4xl mx-auto leading-relaxed font-light`}
             >
-              Find answers to common questions or reach out for personalized support.
+              {t('help.subtitle')}
             </p>
           </motion.div>
 
@@ -122,7 +104,7 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                 isDarkMode ? 'text-gray-200' : 'text-gray-700'
               }`}
             >
-              Frequently Asked Questions
+              {t('help.faq.title')}
             </h3>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
@@ -189,7 +171,7 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                   isDarkMode ? 'text-gray-200' : 'text-gray-700'
                 }`}
               >
-                Get in Touch
+                {t('help.contact.title')}
               </h3>
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
@@ -204,10 +186,10 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                         isDarkMode ? 'text-gray-200' : 'text-gray-700'
                       }`}
                     >
-                      Email
+                      {t('help.contact.email')}
                     </h4>
                     <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                      thanseyha2002@gmail.com
+                      {t('help.contact.emailValue')}
                     </p>
                   </div>
                 </div>
@@ -223,10 +205,10 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                         isDarkMode ? 'text-gray-200' : 'text-gray-700'
                       }`}
                     >
-                      Phone
+                      {t('help.contact.phone')}
                     </h4>
                     <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                      +885 186-323-203
+                      {t('help.contact.phoneValue')}
                     </p>
                   </div>
                 </div>
@@ -242,10 +224,10 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                         isDarkMode ? 'text-gray-200' : 'text-gray-700'
                       }`}
                     >
-                      Location
+                      {t('help.contact.location')}
                     </h4>
                     <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                      Phnom Penh, Cambodia
+                      {t('help.contact.locationValue')}
                     </p>
                   </div>
                 </div>
@@ -255,7 +237,7 @@ const HelpCenter = ({ isDarkMode, setCurrentPage }) => {
                 onClick={() => setCurrentPage('contact')}
               >
                 <FaEnvelope className="w-5 h-5" />
-                <span>Contact Us</span>
+                <span>{t('help.contact.contactUs')}</span>
               </button>
             </div>
           </motion.div>

@@ -1,19 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { X, Star, ShoppingCart, Heart, Share2, Truck, Shield, RefreshCw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { X, Star, ShoppingCart, Heart, Share2, Truck, Shield, RefreshCw, Zap } from 'lucide-react';
 
-const ProductModal = ({ product, onClose, addToCart, toggleWishlist, wishlistItems }) => {
+const ProductModal = ({ product, onClose, addToCart, toggleWishlist, wishlistItems, onBuyNow }) => {
+  const { t } = useTranslation(); // Initialize translation hook
+
   // Check if product is undefined or null
   if (!product) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
         <div className="bg-white rounded-lg p-6">
-          <p className="text-gray-600">No product selected.</p>
+          <p className="text-gray-600">{t('products.modal.noProductSelected')}</p>
           <button
             onClick={onClose}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
-            Close
+            {t('products.modal.close')}
           </button>
         </div>
       </div>
@@ -21,6 +24,11 @@ const ProductModal = ({ product, onClose, addToCart, toggleWishlist, wishlistIte
   }
 
   const isInWishlist = wishlistItems.find((item) => item.id === product.id);
+
+  const handleBuyNow = () => {
+    onBuyNow(product);
+    onClose(); // Close modal after buy now
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
@@ -58,7 +66,7 @@ const ProductModal = ({ product, onClose, addToCart, toggleWishlist, wishlistIte
                     />
                   ))}
                 </div>
-                <span className="ml-2 text-gray-600">({product.reviews} reviews)</span>
+                <span className="ml-2 text-gray-600">{t('products.modal.reviews', { count: product.reviews })}</span>
               </div>
 
               {/* Price */}
@@ -76,8 +84,7 @@ const ProductModal = ({ product, onClose, addToCart, toggleWishlist, wishlistIte
 
               {/* Brand */}
               <div className="mb-4">
-                <span className="text-gray-600">Brand: </span>
-                <span className="font-semibold">{product.brand}</span>
+                <span className="text-gray-600">{t('products.modal.brand', { brand: product.brand })}</span>
               </div>
 
               {/* Description */}
@@ -85,7 +92,7 @@ const ProductModal = ({ product, onClose, addToCart, toggleWishlist, wishlistIte
 
               {/* Features */}
               <div className="mb-6">
-                <h4 className="font-semibold mb-3">Key Features:</h4>
+                <h4 className="font-semibold mb-3">{t('products.modal.keyFeatures')}</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {(product.features || []).map((feature, index) => ( // Fallback to empty array
                     <div key={index} className="flex items-center space-x-2">
@@ -97,43 +104,59 @@ const ProductModal = ({ product, onClose, addToCart, toggleWishlist, wishlistIte
               </div>
 
               {/* Action Buttons */}
-              <div className="flex space-x-4 mb-6">
+              <div className="space-y-3 mb-6">
+                {/* Buy Now Button - Primary */}
+                <button
+                  onClick={handleBuyNow}
+                  className="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold text-lg rounded-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
+                >
+                  <Zap className="w-5 h-5" />
+                  <span>{t('products.modal.buyNow')}</span>
+                </button>
+
+                {/* Add to Cart Button - Secondary */}
                 <button
                   onClick={() => {
                     addToCart(product);
                     onClose();
                   }}
-                  className="flex-1 btn-primary flex items-center justify-center space-x-2"
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
                 >
                   <ShoppingCart className="w-5 h-5" />
-                  <span>Add to Cart</span>
+                  <span>{t('products.modal.addToCart')}</span>
                 </button>
-                <button
-                  onClick={() => toggleWishlist(product)}
-                  className={`p-3 rounded-lg border-2 transition-colors ${
-                    isInWishlist ? 'border-red-500 text-red-500 bg-red-50' : 'border-gray-300 text-gray-600 hover:border-red-500 hover:text-red-500'
-                  }`}
-                >
-                  <Heart className="w-6 h-6" />
-                </button>
-                <button className="p-3 border-2 border-gray-300 text-gray-600 rounded-lg hover:border-blue-500 hover:text-blue-500 transition-colors">
-                  <Share2 className="w-6 h-6" />
-                </button>
+
+                {/* Action Icons */}
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => toggleWishlist(product)}
+                    className={`flex-1 p-3 rounded-lg border-2 transition-colors flex items-center justify-center ${
+                      isInWishlist ? 'border-red-500 text-red-500 bg-red-50' : 'border-gray-300 text-gray-600 hover:border-red-500 hover:text-red-500'
+                    }`}
+                  >
+                    <Heart className="w-5 h-5 mr-2" />
+                    <span className="text-sm">{isInWishlist ? t('products.modal.inWishlist') : t('products.modal.addToWishlist')}</span>
+                  </button>
+                  <button className="p-3 border-2 border-gray-300 text-gray-600 rounded-lg hover:border-blue-500 hover:text-blue-500 transition-colors">
+                    <Share2 className="w-6 h-6" />
+                    <span className="sr-only">{t('products.modal.share')}</span>
+                  </button>
+                </div>
               </div>
 
               {/* Product Info */}
               <div className="space-y-4 border-t pt-6">
                 <div className="flex items-center space-x-3 text-sm text-gray-600">
                   <Truck className="w-5 h-5" />
-                  <span>Free shipping on orders over $50</span>
+                  <span>{t('products.modal.freeShipping')}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-gray-600">
                   <RefreshCw className="w-5 h-5" />
-                  <span>30-day return policy</span>
+                  <span>{t('products.modal.returnPolicy')}</span>
                 </div>
                 <div className="flex items-center space-x-3 text-sm text-gray-600">
                   <Shield className="w-5 h-5" />
-                  <span>{product.warranty} warranty included</span>
+                  <span>{t('products.modal.warranty', { warranty: product.warranty })}</span>
                 </div>
               </div>
             </div>
@@ -155,7 +178,7 @@ ProductModal.propTypes = {
     reviews: PropTypes.number.isRequired,
     brand: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    features: PropTypes.arrayOf(PropTypes.string), // Made optional
+    features: PropTypes.arrayOf(PropTypes.string),
     warranty: PropTypes.string.isRequired,
     originalPrice: PropTypes.number,
     discount: PropTypes.number,
@@ -168,6 +191,7 @@ ProductModal.propTypes = {
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     })
   ).isRequired,
+  onBuyNow: PropTypes.func.isRequired,
 };
 
 // Default props
@@ -175,6 +199,7 @@ ProductModal.defaultProps = {
   product: null,
   addToCart: () => {},
   toggleWishlist: () => {},
+  onBuyNow: () => {},
 };
 
 export default ProductModal;

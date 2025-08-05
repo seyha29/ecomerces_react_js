@@ -16,12 +16,79 @@ import {
   Gift,
   Zap,
   Globe,
-  CheckCircle,
-  AlertCircle,
-  Info,
   MessageCircle,
+  Languages,
 } from 'lucide-react';
 import NotificationComponent from './Notification';
+import '../pages/LoginPage.css';
+
+const LanguageSwitcher = ({ changeLanguage, currentLanguage }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const USFlag = () => (
+    <svg className="w-5 h-3" viewBox="0 0 24 16" fill="none">
+      <rect width="24" height="16" fill="#B22234" />
+      <rect width="24" height="1.23" y="1.23" fill="white" />
+      <rect width="24" height="1.23" y="3.69" fill="white" />
+      <rect width="24" height="1.23" y="6.15" fill="white" />
+      <rect width="24" height="1.23" y="8.62" fill="white" />
+      <rect width="24" height="1.23" y="11.08" fill="white" />
+      <rect width="24" height="1.23" y="13.54" fill="white" />
+      <rect width="9.6" height="8.62" fill="#3C3B6E" />
+    </svg>
+  );
+
+  const KhmerFlag = () => (
+    <svg className="w-5 h-3" viewBox="0 0 20 16" fill="none">
+      <rect width="24" height="16" fill="#032EA1" />
+      <rect width="24" height="4" y="6" fill="#E4002B" />
+      <rect width="12" height="2" x="6" y="7" fill="white" />
+    </svg>
+  );
+
+  const getCurrentFlag = () => {
+    return currentLanguage === 'en' ? <USFlag /> : <KhmerFlag />;
+  };
+
+  const handleChangeLanguage = (lng) => {
+    changeLanguage(lng);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        className="flex items-center space-x-1 hover:text-blue-300 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {getCurrentFlag()}
+        <Languages className="w-4 h-4" />
+      </button>
+      {isOpen && (
+        <div className="absolute right-0 top-full mt-2 w-32 bg-white rounded-lg shadow-lg border z-50">
+          <button
+            className={`w-full text-left px-3 py-2 hover:bg-gray-100 rounded-t-lg flex items-center gap-2 text-gray-700 ${
+              currentLanguage === 'en' ? 'bg-blue-50' : ''
+            }`}
+            onClick={() => handleChangeLanguage('en')}
+          >
+            <USFlag />
+            <span className="text-sm">English</span>
+          </button>
+          <button
+            className={`w-full text-left px-3 py-2 hover:bg-gray-100 rounded-b-lg flex items-center gap-2 text-gray-700 ${
+              currentLanguage === 'kh' ? 'bg-blue-50' : ''
+            }`}
+            onClick={() => handleChangeLanguage('kh')}
+          >
+            <KhmerFlag />
+            <span className="text-sm">Khmer</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Header = ({
   currentPage = 'home',
@@ -39,7 +106,10 @@ const Header = ({
   setUser = () => {},
   isDarkMode = false,
   toggleDarkMode = () => {},
-  notifications = [], // Use dynamic notifications from App.js
+  notifications = [],
+  t = (key) => key,
+  changeLanguage = () => {},
+  currentLanguage = 'en',
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -49,13 +119,21 @@ const Header = ({
   const dropdownRef = useRef(null);
 
   const categories = [
-    { id: 'electronics', name: 'Electronics', icon: '📱' },
-    { id: 'fashion', name: 'Fashion', icon: '👕' },
-    { id: 'home', name: 'Home & Garden', icon: '🏠' },
-    { id: 'food', name: 'Food & Drinks', icon: '🍕' },
-    { id: 'sports', name: 'Sports', icon: '⚽' },
-    { id: 'books', name: 'Books', icon: '📚' },
-    { id: 'beauty', name: 'Beauty', icon: '💄' },
+    { id: 'electronics', name: t('categories.electronics'), icon: '📱' },
+    { id: 'fashion', name: t('categories.fashion'), icon: '👕' },
+    { id: 'home', name: t('categories.home'), icon: '🏠' },
+    { id: 'food', name: t('categories.food'), icon: '🍕' },
+    { id: 'sports', name: t('categories.sports'), icon: '⚽' },
+    { id: 'books', name: t('categories.books'), icon: '📚' },
+    { id: 'beauty', name: t('categories.beauty'), icon: '💄' },
+  ];
+
+  const popularSearchTerms = [
+    t('search.iphone'),
+    t('search.macbook'),
+    t('search.airpods'),
+    t('search.gaming'),
+    t('search.fashion'),
   ];
 
   useEffect(() => {
@@ -104,22 +182,42 @@ const Header = ({
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Zap className="w-4 h-4 animate-pulse" />
-                <span className="hidden md:inline">Free shipping on orders over $50</span>
-                <span className="md:hidden">Free shipping $50+</span>
+                <span className="hidden md:inline">{t('header.freeShippingFull')}</span>
+                <span className="md:hidden">{t('header.freeShippingShort')}</span>
               </div>
               <div className="hidden sm:flex items-center space-x-2">
-                <a href="https://www.facebook.com/than.seyha.9235/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">
+                <a
+                  href="https://www.facebook.com/than.seyha.9235/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-300 transition-colors"
+                >
                   <Facebook className="w-4 h-4 cursor-pointer" />
                 </a>
-                <a href="https://www.instagram.com/thanseyha_2002/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-300 transition-colors">
+                <a
+                  href="https://www.instagram.com/thanseyha_2002/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-pink-300 transition-colors"
+                >
                   <Instagram className="w-4 h-4 cursor-pointer" />
                 </a>
-                <a href="https://t.me/thanseyha11" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition-colors">
+                <a
+                  href="https://t.me/thanseyha11"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-sky-300 transition-colors"
+                >
                   <Send className="w-4 h-4 cursor-pointer" />
                 </a>
                 <a href="mailto:thanseyha2002@gmail.com" className="hover:text-green-300 transition-colors">
                   <Mail className="w-4 h-4 cursor-pointer" />
                 </a>
+                <div className="mx-2 w-px h-4 bg-white/30"></div>
+                <LanguageSwitcher changeLanguage={changeLanguage} currentLanguage={currentLanguage} />
+              </div>
+              <div className="sm:hidden">
+                <LanguageSwitcher changeLanguage={changeLanguage} currentLanguage={currentLanguage} />
               </div>
             </div>
           </div>
@@ -139,7 +237,7 @@ const Header = ({
                 <h1 className="text-3xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:scale-105 transition-transform">
                   MODERNSTORE
                 </h1>
-                <p className="text-xs text-gray-500 -mt-1">Premium Shopping</p>
+                <p className="text-xs text-gray-500 -mt-1">{t('header.tagline')}</p>
               </div>
             </div>
             <div className="hidden md:flex flex-1 max-w-2xl mx-8">
@@ -151,7 +249,7 @@ const Header = ({
                 >
                   <input
                     type="text"
-                    placeholder="Search for products, brands, categories..."
+                    placeholder={t('search.placeholder')}
                     className="w-full px-6 py-4 pr-14 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 outline-none transition-all duration-300"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -164,9 +262,9 @@ const Header = ({
                 </div>
                 {isSearchFocused && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 z-50">
-                    <div className="text-sm text-gray-600 mb-3">Popular Searches</div>
+                    <div className="text-sm text-gray-600 mb-3">{t('search.popular')}</div>
                     <div className="flex flex-wrap gap-2">
-                      {['iPhone', 'MacBook', 'AirPods', 'Gaming', 'Fashion'].map((term, index) => (
+                      {popularSearchTerms.map((term, index) => (
                         <button
                           key={index}
                           className="px-3 py-1 bg-gray-100 hover:bg-blue-100 rounded-full text-sm transition-colors"
@@ -209,13 +307,29 @@ const Header = ({
                   className="flex items-center space-x-2 p-3 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:scale-105 group"
                   onClick={() => setShowUserMenu(!showUserMenu)}
                 >
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center overflow-hidden">
+                    {isLoggedIn && user?.profileImage ? (
+                      <img
+                        src={user.profileImage}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <User
+                      className="w-5 h-5 text-white"
+                      style={{ display: isLoggedIn && user?.profileImage ? 'none' : 'flex' }}
+                    />
                   </div>
                   {isLoggedIn && (
                     <div className="hidden lg:block">
-                      <div className="text-sm font-medium text-gray-900">Hi, {user?.name || 'User'}</div>
-                      <div className="text-xs text-gray-500">Premium Member</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {t('user.greeting', { name: user?.name || t('user.defaultName') })}
+                      </div>
+                      <div className="text-xs text-gray-500">{t('user.premiumMember')}</div>
                     </div>
                   )}
                   <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-gray-700" />
@@ -224,9 +338,30 @@ const Header = ({
                   <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50">
                     {isLoggedIn ? (
                       <>
-                        <div className="px-4 py-3 border-b border-gray-100">
-                          <div className="font-medium text-gray-900">{user?.name || 'User'}</div>
-                          <div className="text-sm text-gray-500">{user?.email || 'user@example.com'}</div>
+                        <div className="px-4 py-3 border-b border-gray-100 flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center overflow-hidden">
+                            {user?.profileImage ? (
+                              <img
+                                src={user.profileImage}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <User
+                              className="w-6 h-6 text-white"
+                              style={{ display: user?.profileImage ? 'none' : 'flex' }}
+                            />
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">
+                              {user?.name || t('user.defaultName')}
+                            </div>
+                            <div className="text-sm text-gray-500">{user?.email || 'user@example.com'}</div>
+                          </div>
                         </div>
                         <button
                           className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
@@ -235,7 +370,7 @@ const Header = ({
                             setShowUserMenu(false);
                           }}
                         >
-                          My Account
+                          {t('user.myAccount')}
                         </button>
                         <button
                           className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
@@ -244,7 +379,7 @@ const Header = ({
                             setShowUserMenu(false);
                           }}
                         >
-                          Orders
+                          {t('user.orders')}
                         </button>
                         <button
                           className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
@@ -253,7 +388,7 @@ const Header = ({
                             setShowUserMenu(false);
                           }}
                         >
-                          Settings
+                          {t('user.settings')}
                         </button>
                         <div className="border-t border-gray-100 mt-2 pt-2">
                           <button
@@ -261,11 +396,12 @@ const Header = ({
                             onClick={() => {
                               setIsLoggedIn(false);
                               setUser(null);
+                              localStorage.removeItem('user');
                               setCurrentPage('home');
                               setShowUserMenu(false);
                             }}
                           >
-                            Sign Out
+                            {t('user.signOut')}
                           </button>
                         </div>
                       </>
@@ -278,7 +414,7 @@ const Header = ({
                             setShowUserMenu(false);
                           }}
                         >
-                          Sign In
+                          {t('user.signIn')}
                         </button>
                         <button
                           className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
@@ -287,7 +423,7 @@ const Header = ({
                             setShowUserMenu(false);
                           }}
                         >
-                          Create Account
+                          {t('user.createAccount')}
                         </button>
                       </>
                     )}
@@ -311,7 +447,7 @@ const Header = ({
                 onClick={() => setCurrentPage('about')}
               >
                 <span className="text-lg">ℹ️</span>
-                <span className="font-medium">About</span>
+                <span className="font-medium">{t('nav.about')}</span>
               </button>
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -325,13 +461,15 @@ const Header = ({
                   onClick={() => setShowCategoriesDropdown(!showCategoriesDropdown)}
                 >
                   <span className="text-lg">🛍️</span>
-                  <span className="font-medium">Categories</span>
+                  <span className="font-medium">{t('nav.categories')}</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
                 {showCategoriesDropdown && (
-                  <div className={`absolute left-0 top-full mt-2 w-64 rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 ${
-                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-                  }`}>
+                  <div
+                    className={`absolute left-0 top-full mt-2 w-64 rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 ${
+                      isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                    }`}
+                  >
                     {categories.map((category) => (
                       <button
                         key={category.id}
@@ -362,18 +500,17 @@ const Header = ({
                 onClick={() => setCurrentPage('contact')}
               >
                 <MessageCircle className="w-5 h-5" />
-                <span className="font-medium">Contact Us</span>
+                <span className="font-medium">{t('nav.contact')}</span>
               </button>
-              
             </div>
             <div className="hidden lg:flex items-center space-x-4 text-sm">
               <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-100 to-orange-100 px-3 py-1 rounded-full">
                 <Gift className="w-4 h-4 text-orange-600" />
-                <span className="text-orange-700 font-medium">Special Offers</span>
+                <span className="text-orange-700 font-medium">{t('header.specialOffers')}</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-600">
                 <Globe className="w-4 h-4" />
-                <span>Worldwide Shipping</span>
+                <span>{t('header.worldwideShipping')}</span>
               </div>
             </div>
           </div>
@@ -382,7 +519,7 @@ const Header = ({
           <div className="relative">
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={t('search.mobilePlaceholder')}
               className="w-full px-4 py-3 pl-12 bg-gray-50 rounded-2xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -397,8 +534,10 @@ const Header = ({
             <div className="p-6">
               <div className="flex justify-between items-center mb-8">
                 <div>
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Menu</h2>
-                  <p className="text-sm text-gray-500">Browse our categories</p>
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    {t('menu.title')}
+                  </h2>
+                  <p className="text-sm text-gray-500">{t('menu.subtitle')}</p>
                 </div>
                 <button
                   onClick={() => setIsMenuOpen(false)}
@@ -419,8 +558,8 @@ const Header = ({
                     ℹ️
                   </div>
                   <div className="text-left">
-                    <div className="font-medium text-gray-900 group-hover:text-blue-600">About</div>
-                    <div className="text-sm text-gray-500">Learn about us</div>
+                    <div className="font-medium text-gray-900 group-hover:text-blue-600">{t('nav.about')}</div>
+                    <div className="text-sm text-gray-500">{t('menu.aboutDesc')}</div>
                   </div>
                 </button>
                 <button
@@ -433,8 +572,8 @@ const Header = ({
                     🛍️
                   </div>
                   <div className="text-left">
-                    <div className="font-medium text-gray-900 group-hover:text-blue-600">Categories</div>
-                    <div className="text-sm text-gray-500">Browse all categories</div>
+                    <div className="font-medium text-gray-900 group-hover:text-blue-600">{t('nav.categories')}</div>
+                    <div className="text-sm text-gray-500">{t('menu.categoriesDesc')}</div>
                   </div>
                   <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-blue-600" />
                 </button>
@@ -456,7 +595,7 @@ const Header = ({
                         </div>
                         <div className="text-left">
                           <div className="font-medium text-gray-900 group-hover:text-blue-600">{category.name}</div>
-                          <div className="text-sm text-gray-500">Browse collection</div>
+                          <div className="text-sm text-gray-500">{t('menu.browseCollection')}</div>
                         </div>
                       </button>
                     ))}
@@ -473,8 +612,8 @@ const Header = ({
                     <MessageCircle className="w-6 h-6" />
                   </div>
                   <div className="text-left">
-                    <div className="font-medium text-gray-900 group-hover:text-blue-600">Contact Us</div>
-                    <div className="text-sm text-gray-500">Get in touch</div>
+                    <div className="font-medium text-gray-900 group-hover:text-blue-600">{t('nav.contact')}</div>
+                    <div className="text-sm text-gray-500">{t('menu.contactDesc')}</div>
                   </div>
                 </button>
                 <button
@@ -488,26 +627,48 @@ const Header = ({
                     <MessageCircle className="w-6 h-6" />
                   </div>
                   <div className="text-left">
-                    <div className="font-medium text-gray-900 group-hover:text-blue-600">Help Center</div>
-                    <div className="text-sm text-gray-500">Find answers</div>
+                    <div className="font-medium text-gray-900 group-hover:text-blue-600">{t('nav.help')}</div>
+                    <div className="text-sm text-gray-500">{t('menu.helpDesc')}</div>
                   </div>
                 </button>
               </div>
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="text-sm text-gray-600 mb-3">Connect with us</div>
+                <div className="text-sm text-gray-600 mb-3">{t('menu.connect')}</div>
                 <div className="flex items-center space-x-4">
-                  <a href="https://www.facebook.com/than.seyha.9235/" target="_blank" rel="noopener noreferrer" className="p-2 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors">
+                  <a
+                    href="https://www.facebook.com/than.seyha.9235/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
+                  >
                     <Facebook className="w-5 h-5 text-blue-600" />
                   </a>
-                  <a href="https://www.instagram.com/thanseyha_2002/" target="_blank" rel="noopener noreferrer" className="p-2 bg-pink-100 rounded-lg hover:bg-pink-200 transition-colors">
+                  <a
+                    href="https://www.instagram.com/thanseyha_2002/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-pink-100 rounded-lg hover:bg-pink-200 transition-colors"
+                  >
                     <Instagram className="w-5 h-5 text-pink-600" />
                   </a>
-                  <a href="https://t.me/thanseyha11" target="_blank" rel="noopener noreferrer" className="p-2 bg-sky-100 rounded-lg hover:bg-sky-200 transition-colors">
+                  <a
+                    href="https://t.me/thanseyha11"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-sky-100 rounded-lg hover:bg-sky-200 transition-colors"
+                  >
                     <Send className="w-5 h-5 text-sky-600" />
                   </a>
-                  <a href="mailto:thanseyha2002@gmail.com" className="p-2 bg-green-100 rounded-lg hover:bg-green-200 transition-colors">
+                  <a
+                    href="mailto:thanseyha2002@gmail.com"
+                    className="p-2 bg-green-100 rounded-lg hover:bg-green-200 transition-colors"
+                  >
                     <Mail className="w-5 h-5 text-green-600" />
                   </a>
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="text-sm text-gray-600 mb-3">{t('menu.language')}</div>
+                  <LanguageSwitcher changeLanguage={changeLanguage} currentLanguage={currentLanguage} />
                 </div>
               </div>
             </div>
@@ -540,6 +701,7 @@ Header.propTypes = {
   user: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
+    profileImage: PropTypes.string,
   }),
   setIsLoggedIn: PropTypes.func,
   setUser: PropTypes.func,
@@ -550,10 +712,18 @@ Header.propTypes = {
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       type: PropTypes.oneOf(['success', 'warning', 'info']).isRequired,
       message: PropTypes.string.isRequired,
-      time: PropTypes.string.isRequired,
+      time: PropTypes.string,
       icon: PropTypes.element,
     })
   ),
+  t: PropTypes.func.isRequired,
+  changeLanguage: PropTypes.func,
+  currentLanguage: PropTypes.string,
+};
+
+LanguageSwitcher.propTypes = {
+  changeLanguage: PropTypes.func.isRequired,
+  currentLanguage: PropTypes.string.isRequired,
 };
 
 export default Header;

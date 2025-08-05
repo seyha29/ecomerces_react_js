@@ -5,7 +5,7 @@ import { FaPaperPlane, FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/f
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 
-const Contact = ({ isDarkMode, setCurrentPage }) => {
+const Contact = ({ isDarkMode, setCurrentPage, t = (key) => key }) => {
   const form = useRef();
   const [isSending, setIsSending] = useState(false);
   const [sendStatus, setSendStatus] = useState(null);
@@ -102,7 +102,7 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                 } shadow-lg`}
               >
                 <Sparkles className="w-5 h-5 text-indigo-500" />
-                <span className="text-sm font-bold">Get in Touch</span>
+                <span className="text-sm font-bold">{t('contact.getInTouch')}</span>
               </div>
             </div>
             <h2
@@ -110,14 +110,14 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                 isDarkMode ? 'from-gray-200 via-blue-400 to-purple-400' : 'from-gray-800 via-blue-600 to-purple-600'
               } bg-clip-text text-transparent leading-tight`}
             >
-              Contact Me
+              {t('contact.contactMe')}
             </h2>
             <p
               className={`text-xl ${
                 isDarkMode ? 'text-gray-300' : 'text-gray-600'
               } max-w-4xl mx-auto leading-relaxed font-light`}
             >
-              Have questions or want to work together? Drop me a message!
+              {t('contact.subtitle')}
             </p>
           </motion.div>
 
@@ -136,7 +136,7 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                   <FaEnvelope className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                   <div>
                     <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      Email
+                      {t('contact.email')}
                     </h3>
                     <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>thanseyha2002@gmail.com</p>
                   </div>
@@ -145,7 +145,7 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                   <FaPhone className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                   <div>
                     <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      Phone
+                      {t('contact.phone')}
                     </h3>
                     <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>+885 186-323-203</p>
                   </div>
@@ -154,9 +154,9 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                   <FaMapMarkerAlt className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                   <div>
                     <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      Location
+                      {t('contact.location')}
                     </h3>
-                    <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Phnom Penh, Cambodia</p>
+                    <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>{t('contact.locationValue')}</p>
                   </div>
                 </div>
               </div>
@@ -181,13 +181,13 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                       isDarkMode ? 'text-gray-200' : 'text-gray-700'
                     }`}
                   >
-                    Your Name
+                    {t('contact.yourName')}
                   </label>
                   <input
                     type="text"
                     id="name"
                     name="user_name"
-                    placeholder="John Doe"
+                    placeholder={t('contact.namePlaceholder')}
                     className={`w-full p-4 rounded-xl ${
                       isDarkMode
                         ? 'bg-gray-800/80 text-white border-gray-700'
@@ -203,13 +203,13 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                       isDarkMode ? 'text-gray-200' : 'text-gray-700'
                     }`}
                   >
-                    Your Email
+                    {t('contact.yourEmail')}
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="user_email"
-                    placeholder="john@example.com"
+                    placeholder={t('contact.emailPlaceholder')}
                     className={`w-full p-4 rounded-xl ${
                       isDarkMode
                         ? 'bg-gray-800/80 text-white border-gray-700'
@@ -225,13 +225,13 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                       isDarkMode ? 'text-gray-200' : 'text-gray-700'
                     }`}
                   >
-                    Your Message
+                    {t('contact.yourMessage')}
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     rows="5"
-                    placeholder="Hello, I'd like to talk about..."
+                    placeholder={t('contact.messagePlaceholder')}
                     className={`w-full p-4 rounded-xl ${
                       isDarkMode
                         ? 'bg-gray-800/80 text-white border-gray-700'
@@ -250,11 +250,11 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                   }`}
                 >
                   {isSending ? (
-                    'Sending...'
+                    t('contact.sending')
                   ) : (
                     <>
                       <FaPaperPlane className="w-5 h-5" />
-                      <span>Send Message</span>
+                      <span>{t('contact.sendMessage')}</span>
                     </>
                   )}
                 </button>
@@ -264,7 +264,7 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
-                    ✅ Message sent successfully!
+                    ✅ {t('contact.successMessage')}
                   </motion.div>
                 )}
                 {sendStatus === 'error' && (
@@ -273,7 +273,7 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
-                    ❌ Failed to send message. Please try again.
+                    ❌ {t('contact.errorMessage')}
                   </motion.div>
                 )}
               </div>
@@ -288,6 +288,7 @@ const Contact = ({ isDarkMode, setCurrentPage }) => {
 Contact.propTypes = {
   isDarkMode: PropTypes.bool.isRequired,
   setCurrentPage: PropTypes.func.isRequired,
+  t: PropTypes.func, // Translation function
 };
 
 export default Contact;
