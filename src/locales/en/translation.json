@@ -276,6 +276,7 @@
     }
   },
   "contact": {
+    "partnershipSince": "Partnership Since {{year}}",
     "getInTouch": "Get in Touch",
     "contactMe": "Contact Me",
     "subtitle": "Have questions or want to work together? Drop me a message!",
@@ -545,5 +546,55 @@
     "paymentFailed": "Payment failed, please try again",
     "infoUpdate": "Your profile has been updated"
   }
-}
+},
+"partners": {
+    "title": "Our Trusted Partners",
+    "subtitle": "We collaborate with industry-leading brands to bring you exceptional products and innovative solutions.",
+    "collaborationLabel": "Trusted Collaborations",
+    "viewAll": "Discover All Partners",
+    "readyToJoin": "Ready to Join Our Network?",
+    "joinNetwork": "Partner with us to unlock new opportunities, drive innovation, and create extraordinary value together. Let's build the future of business collaboration.",
+    "startPartnership": "Start Partnership",
+    "joinSuccess": "Join {{count}}+ successful partners",
+    "projects": "Projects",
+    "revenue": "Revenue",
+    "satisfaction": "Satisfaction",
+    "learnMore": "Learn More",
+    "visitWebsite": "Visit Website",
+    "techflow": {
+      "description": "Leading the digital transformation with cutting-edge AI solutions and cloud technologies that power the future."
+    },
+    "ecovision": {
+      "description": "Sustainable design pioneers creating eco-friendly solutions that harmonize innovation with environmental responsibility."
+    },
+    "quantum": {
+      "description": "Next-generation quantum computing solutions revolutionizing data processing and computational capabilities."
+    },
+    "greentech": {
+      "description": "Environmental technology leaders creating sustainable solutions for a greener tomorrow."
+    },
+    "categories": {
+      "technology": "Technology",
+      "design": "Design",
+      "science": "Science",
+      "cleanEnergy": "Clean Energy"
+    },
+    "tags": {
+      "ai": "AI",
+      "cloud": "Cloud",
+      "innovation": "Innovation",
+      "sustainable": "Sustainable",
+      "design": "Design",
+      "ecofriendly": "Eco-friendly",
+      "quantum": "Quantum",
+      "computing": "Computing",
+      "cleanEnergy": "Clean Energy"
+    },
+    "stats": {
+      "globalPartners": "Global Partners",
+      "combinedRevenue": "Combined Revenue",
+      "satisfactionRate": "Satisfaction Rate",
+      "partnerRating": "Partner Rating"
+    }
+  }
 }
