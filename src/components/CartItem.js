@@ -38,10 +38,11 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
       <div
         className={`rounded-lg border p-4 ${
           isDarkMode
-            ? "bg-gray-800 border-gray-700"
-            : "bg-white border-gray-200"
+            ? "border-gray-700"
+            : "border-gray-200"
         }`}
       >
+
         <div className="flex gap-4">
           {/* Image */}
           <div className="w-24 h-24 rounded-md overflow-hidden flex-shrink-0">
@@ -56,19 +57,17 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
           <div className="flex-1">
             {/* Header */}
             <div className="flex justify-between items-start mb-2">
-              <h3
-                className={`font-semibold text-lg ${
-                  isDarkMode ? "text-white" : "text-gray-900"
-                }`}
-              >
+              <h3 className={`font-semibold text-lg ${
+                isDarkMode ? "text-white" : "text-black"
+              }`}>
                 {item.name}
               </h3>
               <button
                 onClick={handleRemove}
-                className={`p-1 rounded hover:bg-gray-100 ${
+                className={`p-1 rounded transition-colors ${
                   isDarkMode 
                     ? "text-gray-400 hover:text-red-400 hover:bg-gray-700" 
-                    : "text-gray-400 hover:text-red-500"
+                    : "text-gray-400 hover:text-red-500 hover:bg-gray-100"
                 }`}
                 aria-label={t('cart.item.remove', 'Remove item')}
               >
@@ -90,7 +89,9 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
                   />
                 ))}
               </div>
-              <span className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+              <span className={`text-xs ${
+                isDarkMode ? "text-white" : "text-black"
+              }`}>
                 {t('cart.item.rating', '4.8 (127)')}
               </span>
             </div>
@@ -98,20 +99,30 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
             {/* Price */}
             <div className="mb-3">
               <div className="flex items-center gap-2">
-                <span className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                <span className={`text-xl font-bold ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}>
                   ${(item.price * item.quantity).toFixed(2)}
                 </span>
-                <span className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                <span className={`text-sm ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}>
                   {t('cart.item.priceEach', '${{price}} each').replace('{{price}}', item.price.toFixed(2))}
                 </span>
               </div>
               
               {item.originalPrice && item.originalPrice > item.price && (
                 <div className="flex items-center gap-2 mt-1">
-                  <span className={`text-sm line-through ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}>
+                  <span className={`text-sm line-through ${
+                    isDarkMode ? "text-gray-400" : "text-gray-500"
+                  }`}>
                     ${item.originalPrice.toFixed(2)}
                   </span>
-                  <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                  <span className={`text-xs px-2 py-0.5 rounded ${
+                    isDarkMode 
+                      ? "bg-red-900 text-red-200" 
+                      : "bg-red-100 text-red-700"
+                  }`}>
                     {t('cart.item.save', 'Save ${{amount}}').replace(
                       '{{amount}}',
                       ((item.originalPrice - item.price) * item.quantity).toFixed(2)
@@ -125,13 +136,13 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
             {(item.size || item.color) && (
               <div className="flex gap-4 mb-3 text-sm">
                 {item.size && (
-                  <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>
-                    {t('cart.item.size', 'Size')}: <span className="font-medium">{item.size}</span>
+                  <span className={isDarkMode ? "text-white" : "text-black"}>
+                    {t('cart.item.size', 'Size')}: <span className={`font-medium ${isDarkMode ? "text-white" : "text-black"}`}>{item.size}</span>
                   </span>
                 )}
                 {item.color && (
-                  <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>
-                    {t('cart.item.color', 'Color')}: <span className="font-medium">{item.color}</span>
+                  <span className={isDarkMode ? "text-white" : "text-black"}>
+                    {t('cart.item.color', 'Color')}: <span className={`font-medium ${isDarkMode ? "text-white" : "text-black"}`}>{item.color}</span>
                   </span>
                 )}
               </div>
@@ -141,21 +152,25 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
             <div className="flex items-center justify-between">
               {/* Quantity */}
               <div className="flex items-center gap-2">
-                <span className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                <span className={`text-sm ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}>
                   {t('cart.item.quantity', 'Qty')}:
                 </span>
-                <div className={`flex items-center border rounded ${
-                  isDarkMode ? "border-gray-600" : "border-gray-300"
+                <div className={`flex items-center border rounded transition-colors ${
+                  isDarkMode 
+                    ? "border-gray-600" 
+                    : "border-gray-300"
                 }`}>
                   <button
                     onClick={handleDecrement}
                     disabled={item.quantity <= 1}
-                    className={`p-1 ${
+                    className={`p-1 transition-colors ${
                       item.quantity <= 1
                         ? "text-gray-400 cursor-not-allowed"
                         : isDarkMode
-                        ? "text-gray-300 hover:text-white"
-                        : "text-gray-600 hover:text-gray-900"
+                        ? "text-gray-300 hover:text-white hover:bg-gray-600"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     }`}
                     aria-label={t('cart.item.decrement', 'Decrease quantity')}
                   >
@@ -163,17 +178,17 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
                   </button>
                   
                   <span className={`px-3 py-1 min-w-[2rem] text-center text-sm font-medium ${
-                    isDarkMode ? "text-white" : "text-gray-900"
+                    isDarkMode ? "text-white" : "text-black"
                   }`}>
                     {item.quantity}
                   </span>
                   
                   <button
                     onClick={handleIncrement}
-                    className={`p-1 ${
+                    className={`p-1 transition-colors ${
                       isDarkMode
-                        ? "text-gray-300 hover:text-white"
-                        : "text-gray-600 hover:text-gray-900"
+                        ? "text-gray-300 hover:text-white hover:bg-gray-600"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     }`}
                     aria-label={t('cart.item.increment', 'Increase quantity')}
                   >
@@ -188,8 +203,8 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
                   onClick={handleMoveToWishlist}
                   className={`px-3 py-1.5 text-sm rounded border transition-colors ${
                     isDarkMode
-                      ? "border-gray-600 text-gray-300 hover:bg-gray-700"
-                      : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                      ? "border-gray-600 text-white hover:bg-gray-700"
+                      : "border-gray-300 text-black hover:bg-gray-50"
                   }`}
                 >
                   <Heart className="w-3 h-3 inline mr-1" />
@@ -198,7 +213,11 @@ const CartItem = ({ item, onIncrementQuantity, onDecrementQuantity, onRemoveItem
                 
                 <button 
                   onClick={() => console.log('Buy now clicked for item:', item.id)}
-                  className="px-4 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                  className={`px-4 py-1.5 text-sm rounded transition-colors ${
+                    isDarkMode
+                      ? "bg-blue-600 hover:bg-blue-500 text-white"
+                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                  }`}
                 >
                   {t('cart.item.buyNow', 'Buy Now')}
                 </button>

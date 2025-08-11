@@ -39,12 +39,51 @@ const App = () => {
   const [notifications, setNotifications] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Smooth scroll function
+  const smoothScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  // Enhanced page navigation with smooth scrolling
+  const navigateToPage = (page) => {
+    setCurrentPage(page);
+    // Small delay to ensure the page content is rendered before scrolling
+    setTimeout(() => {
+      smoothScrollToTop();
+    }, 10);
+  };
+
+  // Smooth scroll to specific element by ID
+  const scrollToElement = (elementId, offset = 0) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const elementPosition = element.offsetTop - offset;
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   useEffect(() => {
+    // Enhanced smooth scrolling setup
     document.documentElement.style.scrollBehavior = 'smooth';
+    document.body.style.scrollBehavior = 'smooth';
+    
     return () => {
       document.documentElement.style.scrollBehavior = 'auto';
+      document.body.style.scrollBehavior = 'auto';
     };
   }, []);
+
+  // Scroll to top when page changes
+  useEffect(() => {
+    smoothScrollToTop();
+  }, [currentPage]);
 
   useEffect(() => {
     const savedOrders = localStorage.getItem('orders');
@@ -162,7 +201,7 @@ const App = () => {
         icon: <CheckCircle className="w-5 h-5 text-green-500" />,
       },
     ]);
-    setCurrentPage('orders');
+    navigateToPage('orders'); // Use navigateToPage instead of setCurrentPage
   };
 
   const pageProps = {
@@ -174,7 +213,7 @@ const App = () => {
     toggleWishlist,
     getTotalPrice,
     getTotalItems,
-    setCurrentPage,
+    setCurrentPage: navigateToPage, // Use navigateToPage for smooth scrolling
     setSelectedProduct,
     searchQuery,
     setSearchQuery,
@@ -198,6 +237,10 @@ const App = () => {
     changeLanguage,
     currentLanguage: i18n.language,
     t,
+    // Smooth scrolling utilities available to all components
+    smoothScrollToTop,
+    scrollToElement,
+    navigateToPage,
   };
 
   const renderPage = () => {
@@ -235,12 +278,12 @@ const App = () => {
 
   return (
     <div
-      className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}
+      className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}
       style={{ fontFamily: "'Noto Sans Khmer', 'Khmer OS', Arial, sans-serif" }}
     >
       <Header {...pageProps} />
-      <main className="pb-20">{renderPage()}</main>
-      <Footer setCurrentPage={setCurrentPage} />
+      <main className="pb-20 transition-all duration-300">{renderPage()}</main>
+      <Footer setCurrentPage={navigateToPage} />
       {selectedProduct && (
         <ProductModal
           product={selectedProduct}

@@ -93,7 +93,6 @@ const LanguageSwitcher = ({ changeLanguage, currentLanguage }) => {
   );
 };
 
-// Improved IconButton Component with better mobile support
 const IconButton = ({ 
   onClick, 
   children, 
@@ -108,7 +107,6 @@ const IconButton = ({
   const handleTouchStart = (e) => {
     if (!disabled) {
       setIsPressed(true);
-      // Add haptic feedback for supported devices
       if (window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(10);
       }
@@ -161,7 +159,6 @@ const IconButton = ({
   );
 };
 
-// Mobile Action Bar Component for bottom navigation on mobile
 const MobileActionBar = ({
   handleCartClick,
   handleWishlistClick,
@@ -179,7 +176,6 @@ const MobileActionBar = ({
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50 safe-area-pb">
       <div className="flex items-center justify-around py-2">
-        {/* Cart */}
         <IconButton
           onClick={handleCartClick}
           badgeCount={getTotalItems()}
@@ -190,7 +186,6 @@ const MobileActionBar = ({
           <ShoppingCart className="w-6 h-6 text-gray-600 dark:text-gray-400" />
         </IconButton>
 
-        {/* Wishlist */}
         <IconButton
           onClick={handleWishlistClick}
           badgeCount={wishlistItems.length}
@@ -201,7 +196,6 @@ const MobileActionBar = ({
           <Heart className="w-6 h-6 text-gray-600 dark:text-gray-400" />
         </IconButton>
 
-        {/* Notifications */}
         <IconButton
           onClick={handleNotificationClick}
           badgeCount={notifications.length}
@@ -212,7 +206,6 @@ const MobileActionBar = ({
           <Bell className="w-6 h-6 text-gray-600 dark:text-gray-400" />
         </IconButton>
 
-        {/* Dark Mode Toggle */}
         <IconButton
           onClick={handleDarkModeToggle}
           ariaLabel={isDarkMode ? t('header.lightMode') : t('header.darkMode')}
@@ -225,7 +218,6 @@ const MobileActionBar = ({
           )}
         </IconButton>
 
-        {/* User Profile */}
         <IconButton 
           onClick={handleUserClick} 
           ariaLabel="User menu"
@@ -287,6 +279,13 @@ const Header = ({
   const userMenuRef = useRef(null);
   const notificationRef = useRef(null);
 
+  // Reset notification state when page changes
+  useEffect(() => {
+    setShowNotifications(false);
+    setShowUserMenu(false);
+    setShowCategoriesDropdown(false);
+  }, [currentPage]);
+
   const categories = [
     { id: 'electronics', name: t('categories.electronics'), icon: '📱' },
     { id: 'fashion', name: t('categories.fashion'), icon: '👕' },
@@ -305,7 +304,6 @@ const Header = ({
     t('search.fashion'),
   ];
 
-  // Detect mobile device
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -347,7 +345,6 @@ const Header = ({
     };
   }, [isMenuOpen]);
 
-  // Handler functions with proper logging for debugging
   const handleCartClick = () => {
     console.log('Cart clicked!');
     setCurrentPage('cart');
@@ -358,7 +355,8 @@ const Header = ({
     setCurrentPage('wishlist');
   };
 
-  const handleNotificationClick = () => {
+  const handleNotificationClick = (e) => {
+    e.stopPropagation();
     console.log('Notifications clicked!');
     setShowNotifications(!showNotifications);
   };
@@ -383,6 +381,10 @@ const Header = ({
     setShowUserMenu(false);
   };
 
+  const handleNotificationClose = () => {
+    setShowNotifications(false);
+  };
+
   return (
     <>
       <header
@@ -396,6 +398,7 @@ const Header = ({
             : 'bg-white shadow-lg'
         }`}
       >
+        {/* Top Bar */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 text-sm">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-between items-center">
@@ -459,6 +462,8 @@ const Header = ({
             </div>
           </div>
         </div>
+        
+        {/* Main Header */}
         <div className="container mx-auto px-4">
           <div className="py-4">
             <div className="flex items-center justify-between">
@@ -478,6 +483,7 @@ const Header = ({
                 </div>
               </div>
 
+              {/* Desktop Search */}
               <div className="hidden md:flex flex-1 max-w-2xl mx-8">
                 <div className={`relative w-full transition-all duration-300 ${isSearchFocused ? 'scale-105' : ''}`}>
                   <div
@@ -534,10 +540,19 @@ const Header = ({
                   >
                     <Bell className="w-6 h-6 text-gray-600 dark:text-gray-400 hover:text-blue-600" />
                   </IconButton>
+                  
                   {showNotifications && (
                     <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50">
                       <div className="p-4 border-b border-gray-100 dark:border-gray-700">
-                        <h3 className="font-semibold text-gray-900 dark:text-gray-200">Notifications</h3>
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-gray-900 dark:text-gray-200">Notifications</h3>
+                          <button
+                            onClick={handleNotificationClose}
+                            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
+                          >
+                            <X className="w-4 h-4 text-gray-500" />
+                          </button>
+                        </div>
                       </div>
                       <div className="max-h-96 overflow-y-auto">
                         {notifications.length > 0 ? (
@@ -622,105 +637,106 @@ const Header = ({
                   </IconButton>
 
                   {showUserMenu && (
-                      <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50">
-                        {isLoggedIn ? (
-                          <>
-                            <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center overflow-hidden">
-                                {user?.profileImage ? (
-                                  <img
-                                    src={user.profileImage}
-                                    alt="Profile"
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                      e.target.style.display = 'none';
-                                      e.target.nextSibling.style.display = 'flex';
-                                    }}
-                                  />
-                                ) : null}
-                                <User
-                                  className="w-6 h-6 text-white"
-                                  style={{ display: user?.profileImage ? 'none' : 'flex' }}
+                    <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50">
+                      {isLoggedIn ? (
+                        <>
+                          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center overflow-hidden">
+                              {user?.profileImage ? (
+                                <img
+                                  src={user.profileImage}
+                                  alt="Profile"
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'flex';
+                                  }}
                                 />
-                              </div>
-                              <div>
-                                <div className="font-medium text-gray-900 dark:text-gray-100">
-                                  {user?.name || t('user.defaultName')}
-                                </div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">{user?.email || 'user@example.com'}</div>
-                              </div>
+                              ) : null}
+                              <User
+                                className="w-6 h-6 text-white"
+                                style={{ display: user?.profileImage ? 'none' : 'flex' }}
+                              />
                             </div>
-                            <button
-                              type="button"
-                              className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
-                              onClick={() => {
-                                setCurrentPage('profile');
-                                setShowUserMenu(false);
-                              }}
-                            >
-                              {t('user.myAccount')}
-                            </button>
-                            <button
-                              type="button"
-                              className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
-                              onClick={() => {
-                                setCurrentPage('orders');
-                                setShowUserMenu(false);
-                              }}
-                            >
-                              {t('user.orders')}
-                            </button>
-                            <button
-                              type="button"
-                              className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
-                              onClick={() => {
-                                setCurrentPage('settings');
-                                setShowUserMenu(false);
-                              }}
-                            >
-                              {t('user.settings')}
-                            </button>
-                            <div className="border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
-                              <button
-                                type="button"
-                                className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
-                                onClick={handleLogout}
-                              >
-                                {t('user.signOut')}
-                              </button>
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-gray-100">
+                                {user?.name || t('user.defaultName')}
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">{user?.email || 'user@example.com'}</div>
                             </div>
-                          </>
-                        ) : (
-                          <>
+                          </div>
+                          <button
+                            type="button"
+                            className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
+                            onClick={() => {
+                              setCurrentPage('profile');
+                              setShowUserMenu(false);
+                            }}
+                          >
+                            {t('user.myAccount')}
+                          </button>
+                          <button
+                            type="button"
+                            className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
+                            onClick={() => {
+                              setCurrentPage('orders');
+                              setShowUserMenu(false);
+                            }}
+                          >
+                            {t('user.orders')}
+                          </button>
+                          <button
+                            type="button"
+                            className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
+                            onClick={() => {
+                              setCurrentPage('settings');
+                              setShowUserMenu(false);
+                            }}
+                          >
+                            {t('user.settings')}
+                          </button>
+                          <div className="border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
                             <button
                               type="button"
-                              className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
-                              onClick={() => {
-                                setCurrentPage('login');
-                                setShowUserMenu(false);
-                              }}
+                              className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
+                              onClick={handleLogout}
                             >
-                              {t('user.signIn')}
+                              {t('user.signOut')}
                             </button>
-                            <button
-                              type="button"
-                              className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
-                              onClick={() => {
-                                setCurrentPage('login');
-                                setShowUserMenu(false);
-                              }}
-                            >
-                              {t('user.createAccount')}
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    )}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
+                            onClick={() => {
+                              setCurrentPage('login');
+                              setShowUserMenu(false);
+                            }}
+                          >
+                            {t('user.signIn')}
+                          </button>
+                          <button
+                            type="button"
+                            className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer touch-manipulation min-h-[48px]"
+                            onClick={() => {
+                              setCurrentPage('login');
+                              setShowUserMenu(false);
+                            }}
+                          >
+                            {t('user.createAccount')}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Navigation */}
           <nav className="border-t border-gray-100 dark:border-gray-700 py-4">
             <div className="flex items-center justify-between">
               <div className="hidden lg:flex items-center space-x-2">
@@ -808,6 +824,7 @@ const Header = ({
             </div>
           </nav>
 
+          {/* Mobile Search */}
           <div className="md:hidden pb-4">
             <div className="relative">
               <input
@@ -907,6 +924,7 @@ const Header = ({
                   </button>
                 </div>
 
+                {/* Navigation Items */}
                 <div className="space-y-2">
                   <button
                     type="button"
@@ -925,6 +943,7 @@ const Header = ({
                     </div>
                   </button>
 
+                  {/* Categories in Mobile Menu */}
                   <button
                     type="button"
                     className="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900 dark:hover:to-purple-900 transition-all duration-200 hover:scale-105 group cursor-pointer touch-manipulation min-h-[72px]"
@@ -935,13 +954,14 @@ const Header = ({
                     <div className="text-2xl bg-gray-100 dark:bg-gray-800 w-12 h-12 rounded-2xl flex items-center justify-center group-hover:bg-white dark:group-hover:bg-gray-700 transition-colors">
                       🛍️
                     </div>
-                    <div className="text-left">
+                    <div className="text-left flex-1">
                       <div className="font-medium text-gray-900 dark:text-gray-200 group-hover:text-blue-600">{t('nav.categories')}</div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">{t('menu.categoriesDesc')}</div>
                     </div>
-                    <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-blue-600" />
+                    <ChevronDown className={`w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 transition-transform ${showCategoriesDropdown ? 'rotate-180' : ''}`} />
                   </button>
 
+                  {/* Categories Dropdown in Mobile Menu */}
                   {showCategoriesDropdown && (
                     <div className="ml-6 space-y-2">
                       {categories.map((category) => (
@@ -968,6 +988,7 @@ const Header = ({
                     </div>
                   )}
 
+                  {/* Contact */}
                   <button
                     type="button"
                     className="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900 dark:hover:to-purple-900 transition-all duration-200 hover:scale-105 group cursor-pointer touch-manipulation min-h-[72px]"
@@ -985,6 +1006,7 @@ const Header = ({
                     </div>
                   </button>
 
+                  {/* Help */}
                   <button
                     type="button"
                     className="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900 dark:hover:to-purple-900 transition-all duration-200 hover:scale-105 group cursor-pointer touch-manipulation min-h-[72px]"
@@ -1002,7 +1024,7 @@ const Header = ({
                     </div>
                   </button>
 
-                  {/* User Menu Options in Mobile Menu */}
+                  {/* User Account Section */}
                   <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">{t('menu.account')}</div>
                     {isLoggedIn ? (
@@ -1103,6 +1125,7 @@ const Header = ({
                   </div>
                 </div>
 
+                {/* Social Links and Language Switcher */}
                 <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">{t('menu.connect')}</div>
                   <div className="flex items-center space-x-4">
@@ -1137,10 +1160,6 @@ const Header = ({
                       <Mail className="w-5 h-5 text-green-600 dark:text-green-400" />
                     </a>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">{t('menu.language')}</div>
-                    <LanguageSwitcher changeLanguage={changeLanguage} currentLanguage={currentLanguage} />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1148,7 +1167,7 @@ const Header = ({
         )}
       </header>
 
-      {/* Mobile Bottom Action Bar */}
+      {/* Mobile Action Bar */}
       <MobileActionBar
         handleCartClick={handleCartClick}
         handleWishlistClick={handleWishlistClick}
@@ -1164,19 +1183,19 @@ const Header = ({
         t={t}
       />
 
-      {/* Notification Component */}
-      {showNotifications && (
+      {/* Mobile Notification Overlay */}
+      {showNotifications && isMobile && (
         <NotificationComponent
           notifications={notifications}
-          onClose={() => setShowNotifications(false)}
-          isDarkMode={isDarkMode}
+          onClose={handleNotificationClose}
+          t={t}
         />
       )}
     </>
   );
 };
 
-// PropTypes for better type checking
+// PropTypes
 Header.propTypes = {
   currentPage: PropTypes.string,
   setCurrentPage: PropTypes.func,
